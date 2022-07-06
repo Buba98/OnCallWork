@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "236997337704",
+    "project_id": "on-call-work-project",
+    "storage_bucket": "on-call-work-project.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:236997337704:android:f044871f833f64fe0b91dd",
+        "android_client_info": {
+          "package_name": "com.buba.on_call_work"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "236997337704-8jn8al1v0eq8ik2pclieibfdpgd95iu3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBraO4g0GEZTzHItcI7JmaYejDPBlMkGRU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "236997337704-8jn8al1v0eq8ik2pclieibfdpgd95iu3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
