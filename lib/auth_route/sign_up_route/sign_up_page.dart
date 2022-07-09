@@ -34,7 +34,7 @@ class SignUpPage extends StatelessWidget {
                 TextField(
                   controller: passwordTextEditingController,
                   decoration: InputDecoration(
-                    hintText: 'Password',
+                    labelText: 'Password',
                     errorText: state == SignUpState.weakPassword
                         ? "Weak password"
                         : null,

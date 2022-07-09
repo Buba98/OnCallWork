@@ -5,8 +5,8 @@ class RepositoryService {
   static final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   static Future<void> addDocument(
-      CollectionReference collectionReference, Map<String, dynamic> document) {
-    return collectionReference.add(document).then(
+      String collectionPath, Map<String, dynamic> document) {
+    return _firestore.collection(collectionPath).add(document).then(
           (value) => developer.log("Document added: $value"),
         )..catchError(
         (error) => developer.log("Failed to add user: $error"),

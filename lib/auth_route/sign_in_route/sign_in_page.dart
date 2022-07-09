@@ -33,7 +33,7 @@ class SignInPage extends StatelessWidget {
                 TextField(
                   controller: passwordTextEditingController,
                   decoration: InputDecoration(
-                    hintText: 'Password',
+                    labelText: 'Password',
                     errorText: state == SignInState.wrongEmail
                         ? "Wrong password"
                         : null,

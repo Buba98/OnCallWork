@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:on_call_work/home_route/search_screen.dart';
 
-import 'add_screen.dart';
+import 'add_screen/add_screen.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -16,11 +16,6 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        actions: const [
-          Icon(Icons.refresh),
-        ],
-      ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
         onTap: (int index) => setState(() => _currentIndex = index),
@@ -35,7 +30,7 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
-      body: _currentIndex == 0 ? const SearchScreen() : AddScreen(),
+      body: _currentIndex == 0 ? const SearchScreen() : const AddScreen(),
     );
   }
 }
