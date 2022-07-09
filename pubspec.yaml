@@ -16,6 +16,9 @@ dependencies:
   flutter_bloc: ^8.0.1
   firebase_auth: ^3.4.1
   firebase_core: ^1.19.1
+  cloud_firestore: ^3.2.1
+  latlong2: ^0.8.1
+  dart_geohash: ^2.0.2
 
 dev_dependencies:
   flutter_test:

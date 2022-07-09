@@ -1,7 +1,9 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:on_call_work/home_route/bloc/job_bloc.dart';
 import 'package:on_call_work/home_route/home_page.dart';
+import 'package:on_call_work/service/repository_service.dart';
 import 'package:on_call_work/splash_page.dart';
 
 import 'auth_route/auth_page.dart';
@@ -16,6 +18,9 @@ Future<void> main() async {
       providers: [
         BlocProvider<AuthBloc>(
           create: (BuildContext context) => AuthBloc(),
+        ),
+        BlocProvider<JobBloc>(
+          create: (BuildContext context) => JobBloc(),
         ),
       ],
       child: const OnCallWorkApp(),
@@ -39,7 +44,7 @@ class OnCallWorkApp extends StatelessWidget {
             case AuthState.init:
               return const SplashPage();
             case AuthState.unauthenticated:
-              return const AuthPage();
+              return const HomePage();
             case AuthState.authenticated:
               return const HomePage();
           }
