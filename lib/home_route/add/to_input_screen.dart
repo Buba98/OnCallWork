@@ -44,7 +44,7 @@ class _ToInputScreenState extends State<ToInputScreen> {
           onTap: () => _selectDate(context),
           decoration: const InputDecoration(
             prefixIcon: Icon(Icons.calendar_month),
-            labelText: 'Start date',
+            labelText: 'End date',
           ),
           controller: dateTextEditingController,
         ),
@@ -56,7 +56,7 @@ class _ToInputScreenState extends State<ToInputScreen> {
           onTap: () => _selectTime(context),
           decoration: const InputDecoration(
             prefixIcon: Icon(Icons.watch_later_outlined),
-            labelText: 'Start date',
+            labelText: 'End time',
           ),
           controller: timeTextEditingController,
         ),

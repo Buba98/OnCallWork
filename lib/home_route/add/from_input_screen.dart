@@ -49,7 +49,7 @@ class _FromInputScreenState extends State<FromInputScreen> {
           onTap: () => _selectTime(context),
           decoration: const InputDecoration(
             prefixIcon: Icon(Icons.watch_later_outlined),
-            labelText: 'Start date',
+            labelText: 'Start time',
           ),
           controller: timeTextEditingController,
         ),
