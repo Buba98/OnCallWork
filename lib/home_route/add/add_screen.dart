@@ -1,11 +1,10 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:on_call_work/home_route/add_screen/pay_location_input_screen.dart';
-import 'package:on_call_work/home_route/add_screen/summary_screen.dart';
-import 'package:on_call_work/home_route/add_screen/to_input_screen.dart';
+import 'package:on_call_work/home_route/add/summary_screen.dart';
 
+import 'pay_location_input_screen.dart';
+import 'to_input_screen.dart';
 import '../bloc/job_bloc.dart';
 import 'from_input_screen.dart';
 import 'name_description_input_screen.dart';
@@ -97,10 +96,9 @@ class _AddScreen extends State<AddScreen> {
                           name: name,
                           description: description,
                           pay: pay,
-                          location:
-                              GeoPoint(location.latitude, location.longitude),
-                          from: Timestamp.fromDate(from),
-                          to: Timestamp.fromDate(to),
+                          location: location,
+                          from: from,
+                          to: to,
                         ),
                       );
                 },

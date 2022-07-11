@@ -18,6 +18,7 @@ class SignUpPage extends StatelessWidget {
         child: BlocBuilder<SignUpBloc, SignUpState>(
           builder: (BuildContext context, SignUpState state) {
             return Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 state == SignUpState.unhandledError
                     ? const Text('Not recognized error')
@@ -48,7 +49,7 @@ class SignUpPage extends StatelessWidget {
                           password: passwordTextEditingController.text,
                         ),
                       ),
-                  child: const Text('Sign in'),
+                  child: const Text('Sign up'),
                 ),
               ],
             );

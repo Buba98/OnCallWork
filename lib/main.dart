@@ -1,12 +1,12 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:on_call_work/auth_route/auth_page.dart';
+import 'package:on_call_work/complete_account/complete_account_page.dart';
 import 'package:on_call_work/home_route/bloc/job_bloc.dart';
 import 'package:on_call_work/home_route/home_page.dart';
-import 'package:on_call_work/service/repository_service.dart';
 import 'package:on_call_work/splash_page.dart';
 
-import 'auth_route/auth_page.dart';
 import 'bloc/auth_bloc.dart';
 
 Future<void> main() async {
@@ -38,17 +38,26 @@ class OnCallWorkApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: BlocBuilder<AuthBloc, AuthState>(
-        builder: (BuildContext context, AuthState state) {
-          switch (state) {
-            case AuthState.init:
-              return const SplashPage();
-            case AuthState.unauthenticated:
-              return const HomePage();
-            case AuthState.authenticated:
-              return const HomePage();
+      home: BlocListener<AuthBloc, AuthState>(
+        listener: (BuildContext context, AuthState state) {
+          if (state is AuthUnauthenticatedState) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => const AuthPage()),
+            );
+          } else if (state is AuthAuthenticatedState) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => const HomePage()),
+            );
+          } else if (state is AuthCompleteAccountState) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => CompleteAccountPage()),
+            );
           }
         },
+        child: const SplashPage(),
       ),
     );
   }

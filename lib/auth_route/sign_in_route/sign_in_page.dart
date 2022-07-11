@@ -18,6 +18,7 @@ class SignInPage extends StatelessWidget {
         child: BlocBuilder<SignInBloc, SignInState>(
           builder: (BuildContext context, SignInState state) {
             return Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 state == SignInState.unhandledError
                     ? const Text('Not recognized error')

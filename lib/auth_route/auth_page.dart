@@ -8,23 +8,26 @@ class AuthPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
-          ElevatedButton(
-            onPressed: () => Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => SignInPage()),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ElevatedButton(
+              onPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => SignInPage()),
+              ),
+              child: const Text('Sign in'),
             ),
-            child: const Text('Sign in'),
-          ),
-          ElevatedButton(
-            onPressed: () => Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => SignUpPage()),
+            ElevatedButton(
+              onPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => SignUpPage()),
+              ),
+              child: const Text('Sign up'),
             ),
-            child: const Text('Sign up'),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
