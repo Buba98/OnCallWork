@@ -33,14 +33,14 @@ class SettingScreen extends StatelessWidget {
                   decoration: const InputDecoration(
                     labelText: 'Surname',
                   ),
-                  obscureText: true,
                 ),
                 TextField(
+                  keyboardType: TextInputType.multiline,
+                  maxLines: null,
                   controller: bioTextEditingController,
                   decoration: const InputDecoration(
-                    labelText: 'Surname',
+                    labelText: 'Bio',
                   ),
-                  obscureText: true,
                 ),
                 ElevatedButton(
                   onPressed: () => context.read<AuthBloc>().add(

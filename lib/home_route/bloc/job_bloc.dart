@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -20,7 +22,12 @@ class JobLoadedState extends JobState {
 
 abstract class JobEvent {}
 
-class JobReloadEvent extends JobEvent {}
+class JobReloadEvent extends JobEvent {
+
+  Completer? completer;
+
+  JobReloadEvent({this.completer});
+}
 
 class JobAddEvent extends JobEvent {
   final String name;
@@ -46,8 +53,12 @@ class JobBloc extends Bloc<JobEvent, JobState> {
     on<JobAddEvent>(_onJobAddEvent);
   }
 
-  _onJobReloadEvent(JobEvent event, Emitter<JobState> emit) async {
+  _onJobReloadEvent(JobReloadEvent event, Emitter<JobState> emit) async {
+    emit(JobLoadingState());
+
     List<Job> jobs = await RepositoryService.getAvailableJobs();
+
+    event.completer?.complete();
 
     emit(JobLoadedState(jobs: jobs));
   }

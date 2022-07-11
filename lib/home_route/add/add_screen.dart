@@ -43,7 +43,7 @@ class _AddScreen extends State<AddScreen> {
       body: Column(
         children: [
           LinearProgressIndicator(
-            value: (status + 1) / 5,
+            value: status / 4,
           ),
           if (status == 0)
             Flexible(
@@ -102,7 +102,7 @@ class _AddScreen extends State<AddScreen> {
                         ),
                       );
                 },
-                description: '',
+                description: description,
                 from: from,
               ),
             ),
