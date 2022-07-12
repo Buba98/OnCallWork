@@ -15,13 +15,8 @@ class SearchScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(),
       body: BlocBuilder<JobBloc, JobState>(
-        buildWhen: (JobState previousState, JobState state){
-          if(state is JobLoadingState){
-            return false;
-          } else {
-            return true;
-          }
-        },
+        buildWhen: (JobState previousState, JobState state) =>
+            state is! JobLoadingState,
         builder: (BuildContext context, JobState state) {
           if (state is JobInitState) {
             context.read<JobBloc>().add(JobReloadEvent());
@@ -29,19 +24,22 @@ class SearchScreen extends StatelessWidget {
           if (state is JobLoadedState) {
             return RefreshIndicator(
               onRefresh: () async {
-
                 Completer completer = Completer();
-                context.read<JobBloc>().add(JobReloadEvent(completer: completer));
+                context
+                    .read<JobBloc>()
+                    .add(JobReloadEvent(completer: completer));
 
                 await completer.future;
-
               },
               child: ListView.builder(
                 itemCount: state.jobs.length,
                 itemBuilder: (context, index) => Padding(
-                    padding:
-                        const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
-                    child: JobCard(job: state.jobs[index])),
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
+                  child: JobCard(
+                    job: state.jobs[index],
+                  ),
+                ),
               ),
             );
           } else {

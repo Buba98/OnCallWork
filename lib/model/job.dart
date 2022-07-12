@@ -24,7 +24,7 @@ class Job {
       : name = document['name'],
         description = document['description'],
         from = (document['from'] as Timestamp).toDate(),
-        to = (document['from'] as Timestamp).toDate(),
+        to = (document['to'] as Timestamp).toDate(),
         pay = document['pay'],
         location = LatLng((document['location'] as GeoPoint).latitude,
             (document['location'] as GeoPoint).latitude),
