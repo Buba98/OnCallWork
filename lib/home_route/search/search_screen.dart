@@ -8,12 +8,18 @@ import '../job_card.dart';
 import '../loading_screen.dart';
 
 class SearchScreen extends StatelessWidget {
-  const SearchScreen({Key? key}) : super(key: key);
+  const SearchScreen({Key? key, required this.leading}) : super(key: key);
+
+  final Widget leading;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        actions: [
+          leading
+        ],
+      ),
       body: BlocBuilder<JobBloc, JobState>(
         buildWhen: (JobState previousState, JobState state) =>
             state is! JobLoadingState,

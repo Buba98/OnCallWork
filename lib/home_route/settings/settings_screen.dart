@@ -4,7 +4,7 @@ import 'package:on_call_work/bloc/auth_bloc.dart';
 import 'package:on_call_work/home_route/loading_screen.dart';
 
 class SettingScreen extends StatelessWidget {
-  SettingScreen({Key? key}) : super(key: key);
+  SettingScreen({Key? key, required this.leading}) : super(key: key);
 
   final TextEditingController nameTextEditingController =
       TextEditingController();
@@ -13,10 +13,16 @@ class SettingScreen extends StatelessWidget {
   final TextEditingController bioTextEditingController =
       TextEditingController();
 
+  final Widget leading;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        actions: [
+          leading,
+        ],
+      ),
       body: BlocBuilder<AuthBloc, AuthState>(
         builder: (BuildContext context, AuthState state) {
           if (state is AuthAuthenticatedState) {
@@ -51,6 +57,17 @@ class SettingScreen extends StatelessWidget {
                         ),
                       ),
                   child: const Text('Save'),
+                ),
+                TextButton(
+                  onPressed: () => context.read<AuthBloc>().add(
+                        SignOutEvent(),
+                      ),
+                  style: ButtonStyle(
+                    foregroundColor: MaterialStateColor.resolveWith(
+                      (states) => Theme.of(context).errorColor,
+                    ),
+                  ),
+                  child: const Text('Sign out'),
                 ),
               ],
             );

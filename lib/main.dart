@@ -38,26 +38,19 @@ class OnCallWorkApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: BlocListener<AuthBloc, AuthState>(
-        listener: (BuildContext context, AuthState state) {
+      home: BlocBuilder<AuthBloc, AuthState>(
+        builder: (BuildContext context, AuthState state) {
+          Navigator.popUntil(context, (route) => route.isFirst);
+
           if (state is AuthUnauthenticatedState) {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => const AuthPage()),
-            );
+            return const AuthPage();
           } else if (state is AuthAuthenticatedState) {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => const HomePage()),
-            );
+            return const HomePage();
           } else if (state is AuthCompleteAccountState) {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => CompleteAccountPage()),
-            );
+            return CompleteAccountPage();
           }
+          return const SplashPage();
         },
-        child: const SplashPage(),
       ),
     );
   }

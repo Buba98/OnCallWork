@@ -87,17 +87,27 @@ class JobCard extends StatelessWidget {
                     TextSpan(
                       text: '\n${job.description}',
                       style: const TextStyle(
-                          fontWeight: FontWeight.normal, color: Colors.black),
+                        fontWeight: FontWeight.normal,
+                      ),
                     ),
                     TextSpan(
-                        text: '\nPay: ${job.pay}',
-                        style: const TextStyle(fontWeight: FontWeight.normal)),
+                      text: '\nPay: ${job.pay}',
+                      style: const TextStyle(
+                        fontWeight: FontWeight.normal,
+                      ),
+                    ),
                     TextSpan(
-                        text: '\nFrom: ${job.from.toString().split(':')[0]}',
-                        style: const TextStyle(fontWeight: FontWeight.normal)),
+                      text: '\nFrom: ${job.from.toString().split(':00')[0]}',
+                      style: const TextStyle(
+                        fontWeight: FontWeight.normal,
+                      ),
+                    ),
                     TextSpan(
-                        text: '\nTo: ${job.to.toString().split(':')[0]}',
-                        style: const TextStyle(fontWeight: FontWeight.normal)),
+                      text: '\nTo: ${job.to.toString().split(':00')[0]}',
+                      style: const TextStyle(
+                        fontWeight: FontWeight.normal,
+                      ),
+                    ),
                   ],
                 ),
               ),

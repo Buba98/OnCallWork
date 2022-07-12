@@ -163,5 +163,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   _onSignOutEvent(AuthEvent event, Emitter<AuthState> emit) async {
     await FirebaseAuth.instance.signOut();
+    reload(event, emit);
   }
 }

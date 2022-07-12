@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:on_call_work/home_route/button_chat.dart';
 import 'package:on_call_work/home_route/search/search_screen.dart';
 import 'package:on_call_work/home_route/add/add_screen.dart';
 import 'package:on_call_work/home_route/settings/settings_screen.dart';
+
+import 'modify/modify_screen.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -12,6 +15,21 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _currentIndex = 0;
+
+  final List<Widget> _screens = [
+    const SearchScreen(
+      leading: ButtonChat(),
+    ),
+    const AddScreen(
+      leading: ButtonChat(),
+    ),
+    const ModifyScreen(
+      leading: ButtonChat(),
+    ),
+    SettingScreen(
+      leading: const ButtonChat(),
+    ),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -40,23 +58,7 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
-      body: _currentIndex == 0
-          ? const SearchScreen()
-          : _currentIndex == 1
-              ? const AddScreen()
-              : _currentIndex == 2
-                  ? const ModifyScreen()
-                  : SettingScreen(),
+      body: _screens[_currentIndex],
     );
-  }
-}
-
-class ModifyScreen extends StatelessWidget {
-  const ModifyScreen({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    // TODO: implement build
-    throw UnimplementedError();
   }
 }
