@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:on_call_work/service/repository_service.dart';
 
 class Job {
   String name;
@@ -7,8 +8,10 @@ class Job {
   DateTime from;
   DateTime to;
   num pay;
+  bool isAvailable;
   LatLng location;
-  String ownerId;
+  String uidOwner;
+  String? uid;
 
   Job({
     required this.name,
@@ -17,18 +20,10 @@ class Job {
     required this.to,
     required this.pay,
     required this.location,
-    required this.ownerId,
+    required this.uidOwner,
+    required this.isAvailable,
+    this.uid,
   });
-
-  Job.fromFirestore(Map<String, dynamic> document)
-      : name = document['name'],
-        description = document['description'],
-        from = (document['from'] as Timestamp).toDate(),
-        to = (document['to'] as Timestamp).toDate(),
-        pay = document['pay'],
-        location = LatLng((document['location'] as GeoPoint).latitude,
-            (document['location'] as GeoPoint).latitude),
-        ownerId = document['owner_id'];
 
   Job.fromJson(Map<String, dynamic> json)
       : name = json['name'],
@@ -37,7 +32,18 @@ class Job {
         to = json['to'],
         pay = json['pay'],
         location = json['location'],
-        ownerId = json['owner_id'];
+        uidOwner = json['uid_owner'],
+        uid = json['uid'],
+        isAvailable = json['is_available'];
+
+  factory Job.fromFirestore(DocumentSnapshot documentSnapshot) {
+    Map<String, dynamic> json = documentSnapshot.data() as Map<String, dynamic>;
+
+    json['uid'] = documentSnapshot.id;
+    json['uid_owner'] = (json['uid_owner'] as DocumentReference?)!.id;
+
+    return Job.fromJson(json);
+  }
 
   Map<String, dynamic> get json => {
         'name': name,
@@ -46,16 +52,20 @@ class Job {
         'to': to,
         'pay': pay,
         'location': location,
-        'owner_id': ownerId,
+        'uid_owner': uidOwner,
+        'uid': uid,
+        'is_available': isAvailable,
       };
 
-  Map<String, dynamic> get firestoreDocument => {
-        'name': name,
-        'description': description,
-        'from': Timestamp.fromDate(from),
-        'to': Timestamp.fromDate(to),
-        'pay': pay,
-        'location': GeoPoint(location.latitude, location.longitude),
-        'owner_id': ownerId,
-      };
+  Map<String, dynamic> get firestore {
+    Map<String, dynamic> json = this.json;
+
+    json.remove('uid');
+    json['from'] = Timestamp.fromDate(from);
+    json['to'] = Timestamp.fromDate(to);
+    json['location'] = GeoPoint(location.latitude, location.longitude);
+    json['uid_owner'] = RepositoryService.users.doc(json['uid_owner']);
+
+    return json;
+  }
 }

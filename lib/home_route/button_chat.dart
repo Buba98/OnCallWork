@@ -12,8 +12,7 @@ class ButtonChat extends StatelessWidget {
         Navigator.push(
           context,
           PageRouteBuilder(
-            pageBuilder: (context, animation, secondaryAnimation) =>
-                const ChatPage(),
+            pageBuilder: (context, animation, secondaryAnimation) => ChatPage(),
             transitionsBuilder:
                 (context, animation, secondaryAnimation, child) =>
                     SlideTransition(

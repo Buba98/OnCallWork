@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:latlong2/latlong.dart';
@@ -23,7 +22,6 @@ class JobLoadedState extends JobState {
 abstract class JobEvent {}
 
 class JobReloadEvent extends JobEvent {
-
   Completer? completer;
 
   JobReloadEvent({this.completer});
@@ -71,7 +69,8 @@ class JobBloc extends Bloc<JobEvent, JobState> {
       to: event.to,
       pay: event.pay,
       location: event.location,
-      ownerId: FirebaseAuth.instance.currentUser!.uid,
+      uidOwner: FirebaseAuth.instance.currentUser!.uid,
+      isAvailable: true,
     );
     RepositoryService.addJob(job);
   }

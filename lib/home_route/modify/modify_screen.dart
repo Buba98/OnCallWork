@@ -1,11 +1,12 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 class ModifyScreen extends StatelessWidget {
   const ModifyScreen({Key? key, required Widget leading}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-    throw UnimplementedError();
+    return Scaffold(
+      body: Column(),
+    );
   }
 }
