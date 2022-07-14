@@ -7,20 +7,23 @@ class Chat {
   final String? uid;
   final String uidJob;
   final String uidEmployee;
-  final List<Message> messages;
+  final List<Message> messagesEmployer;
+  final List<Message> messagesEmployee;
 
   Chat({
     this.uid,
     required this.uidJob,
     required this.uidEmployee,
-    required this.messages,
+    required this.messagesEmployee,
+    required this.messagesEmployer,
   });
 
   Chat.fromJson(Map<String, dynamic> json)
       : uid = json['uid'],
         uidJob = json['uid_job'],
         uidEmployee = json['uid_employee'],
-        messages = Message.fromJsonList(json['messages']);
+        messagesEmployer = Message.fromJsonList(json['messages_employer']),
+        messagesEmployee = Message.fromJsonList(json['messages_employee']);
 
   factory Chat.fromFirestore(DocumentSnapshot documentSnapshot) {
     Map<String, dynamic> json = documentSnapshot.data() as Map<String, dynamic>;
@@ -36,8 +39,10 @@ class Chat {
         'uid': uid,
         'uid_job': uidJob,
         'uid_employee': uidEmployee,
-        'messages': List<Map<String, dynamic>>.generate(
-            messages.length, (index) => messages[index].json),
+        'messages_employee': List<Map<String, dynamic>>.generate(
+            messagesEmployee.length, (index) => messagesEmployee[index].json),
+        'messages_employer': List<Map<String, dynamic>>.generate(
+            messagesEmployer.length, (index) => messagesEmployer[index].json),
       };
 
   Map<String, dynamic> get firestore {

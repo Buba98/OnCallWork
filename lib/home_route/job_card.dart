@@ -1,8 +1,12 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:on_call_work/bloc/auth_bloc.dart';
+import 'package:on_call_work/bloc/chat_bloc.dart';
+import 'package:on_call_work/model/chat/message.dart';
 
 import '../model/job.dart';
 
@@ -72,7 +76,45 @@ class JobCard extends StatelessWidget {
             Align(
               alignment: AlignmentDirectional.topEnd,
               child: IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  final TextEditingController controller =
+                      TextEditingController();
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) => AlertDialog(
+                      title: const Text('Start conversation'),
+                      content: TextField(
+                        controller: controller,
+                        maxLines: null,
+                      ),
+                      actions: <Widget>[
+                        TextButton(
+                          onPressed: () => Navigator.pop(context),
+                          child: const Text('Cancel'),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            context.read<ChatBloc>().add(
+                                  ChatOpenEvent(
+                                    job: job,
+                                    user: (context.read<AuthBloc>().state
+                                            as AuthAuthenticatedState)
+                                        .user,
+                                    message: Message(
+                                      text: controller.text,
+                                      lamport: 0,
+                                    ),
+                                  ),
+                                );
+
+                            Navigator.pop(context);
+                          },
+                          child: const Text('Send'),
+                        ),
+                      ],
+                    ),
+                  );
+                },
                 icon: const Icon(Icons.message),
               ),
             ),

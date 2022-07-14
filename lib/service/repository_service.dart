@@ -45,7 +45,7 @@ class RepositoryService {
       return null;
     }
 
-    return internal_user.User.fromJson(snapshot.data() as Map<String, dynamic>);
+    return internal_user.User.fromDocumentSnapshot(snapshot);
   }
 
   static Future<void> addUser(internal_user.User user) async =>
@@ -62,7 +62,7 @@ class RepositoryService {
           (error) => developer.log("Failed to update user: $error"),
         );
 
-  static Stream<List<Chat>> listenChatAsEmployee() async* {
+  static Stream<List<Chat>> listenChatEmployee() async* {
     Stream chatsStream = chats
         .where('employee', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
         .snapshots();
@@ -77,7 +77,7 @@ class RepositoryService {
     }
   }
 
-  static Stream<List<Chat>> listenChatAsEmployer() async* {
+  static Stream<List<Chat>> listenChatEmployer() async* {
     Stream chatsStream = chats
         .where('employer', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
         .snapshots();
@@ -101,11 +101,15 @@ class RepositoryService {
           (error) => developer.log("Failed to add user: $error"),
         );
 
-  static Future<void> openChat(Job job, User user, Message firstMessage) async {
-    Chat chat =
-        Chat(uidJob: job.uid!, uidEmployee: user.uid, messages: [firstMessage]);
-
-    return jobs.add(chat.firestore).then(
+  static Future<void> openChat(
+      Job job, internal_user.User user, Message firstMessage) async {
+    Chat chat = Chat(
+      uidJob: job.uid!,
+      uidEmployee: user.uid!,
+      messagesEmployee: [firstMessage],
+      messagesEmployer: [],
+    );
+    return chats.add(chat.firestore).then(
           (value) => developer.log("Document added: $value"),
         )..catchError(
         (error) => developer.log("Failed to add user: $error"),

@@ -39,6 +39,10 @@ class Job {
   factory Job.fromFirestore(DocumentSnapshot documentSnapshot) {
     Map<String, dynamic> json = documentSnapshot.data() as Map<String, dynamic>;
 
+    json['from'] = (json['from'] as Timestamp).toDate();
+    json['to'] = (json['to'] as Timestamp).toDate();
+    json['location'] = LatLng(json['location'].latitude, json['location'].longitude);
+
     json['uid'] = documentSnapshot.id;
     json['uid_owner'] = (json['uid_owner'] as DocumentReference?)!.id;
 
