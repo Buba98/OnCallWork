@@ -16,10 +16,10 @@ class Message {
         'lamport': lamport,
       };
 
-  static List<Message> fromJsonList(Map<String, dynamic> document) {
+  static List<Message> fromJsonList(List document) {
     List<Message> messages = [];
 
-    for (Map<String, dynamic> doc in document['messages']) {
+    for (Map<String, dynamic> doc in document) {
       messages.add(Message.fromJson(doc));
     }
 

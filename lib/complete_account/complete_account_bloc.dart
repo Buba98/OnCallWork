@@ -1,8 +1,4 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'dart:developer' as developer;
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:on_call_work/service/repository_service.dart';
-import 'package:on_call_work/model/user.dart' as internal_user;
 
 enum CompleteAccountState {
   init,

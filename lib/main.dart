@@ -2,7 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:on_call_work/auth_route/auth_page.dart';
-import 'package:on_call_work/bloc/chat_bloc.dart';
+import 'package:on_call_work/home_route/bloc/chat_bloc.dart';
 import 'package:on_call_work/complete_account/complete_account_page.dart';
 import 'package:on_call_work/home_route/bloc/job_bloc.dart';
 import 'package:on_call_work/home_route/home_page.dart';

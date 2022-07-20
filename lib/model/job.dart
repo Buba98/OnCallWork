@@ -10,7 +10,7 @@ class Job {
   num pay;
   bool isAvailable;
   LatLng location;
-  String uidOwner;
+  String uidEmployer;
   String? uid;
 
   Job({
@@ -20,7 +20,7 @@ class Job {
     required this.to,
     required this.pay,
     required this.location,
-    required this.uidOwner,
+    required this.uidEmployer,
     required this.isAvailable,
     this.uid,
   });
@@ -32,7 +32,7 @@ class Job {
         to = json['to'],
         pay = json['pay'],
         location = json['location'],
-        uidOwner = json['uid_owner'],
+        uidEmployer = json['uid_employer'],
         uid = json['uid'],
         isAvailable = json['is_available'];
 
@@ -44,7 +44,7 @@ class Job {
     json['location'] = LatLng(json['location'].latitude, json['location'].longitude);
 
     json['uid'] = documentSnapshot.id;
-    json['uid_owner'] = (json['uid_owner'] as DocumentReference?)!.id;
+    json['uid_employer'] = (json['uid_employer'] as DocumentReference?)!.id;
 
     return Job.fromJson(json);
   }
@@ -56,7 +56,7 @@ class Job {
         'to': to,
         'pay': pay,
         'location': location,
-        'uid_owner': uidOwner,
+        'uid_employer': uidEmployer,
         'uid': uid,
         'is_available': isAvailable,
       };
@@ -68,7 +68,7 @@ class Job {
     json['from'] = Timestamp.fromDate(from);
     json['to'] = Timestamp.fromDate(to);
     json['location'] = GeoPoint(location.latitude, location.longitude);
-    json['uid_owner'] = RepositoryService.users.doc(json['uid_owner']);
+    json['uid_employer'] = RepositoryService.users.doc(json['uid_employer']);
 
     return json;
   }

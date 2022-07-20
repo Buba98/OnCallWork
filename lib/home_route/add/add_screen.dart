@@ -10,9 +10,7 @@ import 'from_input_screen.dart';
 import 'name_description_input_screen.dart';
 
 class AddScreen extends StatefulWidget {
-  const AddScreen({Key? key, required this.leading}) : super(key: key);
-
-  final Widget leading;
+  const AddScreen({Key? key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _AddScreen();
@@ -33,11 +31,6 @@ class _AddScreen extends State<AddScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        actions: [
-          widget.leading,
-        ],
-      ),
       body: Column(
         children: [
           LinearProgressIndicator(

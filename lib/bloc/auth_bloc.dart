@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:on_call_work/model/user.dart' as internal_user;
 import 'package:on_call_work/service/repository_service.dart';
 
@@ -13,6 +14,10 @@ class AuthAuthenticatedState extends AuthState {
   final internal_user.User user;
 
   AuthAuthenticatedState({required this.user});
+
+  Future<String?> get profilePicture {
+    return RepositoryService.getProfilePicture(user);
+  }
 }
 
 class AuthCompleteAccountState extends AuthState {}
@@ -46,11 +51,13 @@ class AuthCompleteAccountEvent extends AuthEvent {
 class SignOutEvent extends AuthEvent {}
 
 class AuthUpdateEvent extends AuthEvent {
+  final XFile? picture;
   final String name;
   final String surname;
   final String bio;
 
   AuthUpdateEvent({
+    required this.picture,
     required this.name,
     required this.surname,
     required this.bio,
@@ -120,6 +127,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           bio: bio,
         ),
       );
+
+/*      if(event.picture != null){
+        event.picture.
+      }*/
+
       reload(event, emit);
     }
   }

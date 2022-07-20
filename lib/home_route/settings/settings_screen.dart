@@ -1,11 +1,19 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:on_call_work/bloc/auth_bloc.dart';
 import 'package:on_call_work/home_route/loading_screen.dart';
 
-class SettingScreen extends StatelessWidget {
-  SettingScreen({Key? key, required this.leading}) : super(key: key);
+class SettingsScreen extends StatefulWidget {
+  const SettingsScreen({Key? key}) : super(key: key);
 
+  @override
+  State<StatefulWidget> createState() => _SettingsScreenState();
+}
+
+class _SettingsScreenState extends State<SettingsScreen> {
   final TextEditingController nameTextEditingController =
       TextEditingController();
   final TextEditingController surnameTextEditingController =
@@ -13,67 +21,173 @@ class SettingScreen extends StatelessWidget {
   final TextEditingController bioTextEditingController =
       TextEditingController();
 
-  final Widget leading;
+  XFile? image;
+
+  ImageProvider imageProvider =
+      const AssetImage('assets/images/profile_picture_placeholder.png');
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        actions: [
-          leading,
-        ],
-      ),
       body: BlocBuilder<AuthBloc, AuthState>(
         builder: (BuildContext context, AuthState state) {
           if (state is AuthAuthenticatedState) {
-            return Column(
+            state.profilePicture.then((String? value) {
+              if (value != null) {
+                setState(
+                  () => imageProvider = NetworkImage(value),
+                );
+              }
+            });
+
+            nameTextEditingController.text = state.user.name;
+            surnameTextEditingController.text = state.user.surname;
+            bioTextEditingController.text = state.user.bio;
+
+            return ListView(
               children: [
-                TextField(
-                  controller: nameTextEditingController,
-                  decoration: const InputDecoration(
-                    labelText: 'Name',
-                  ),
-                ),
-                TextField(
-                  controller: surnameTextEditingController,
-                  decoration: const InputDecoration(
-                    labelText: 'Surname',
-                  ),
-                ),
-                TextField(
-                  keyboardType: TextInputType.multiline,
-                  maxLines: null,
-                  controller: bioTextEditingController,
-                  decoration: const InputDecoration(
-                    labelText: 'Bio',
-                  ),
-                ),
-                ElevatedButton(
-                  onPressed: () => context.read<AuthBloc>().add(
-                        AuthUpdateEvent(
-                          name: nameTextEditingController.text,
-                          surname: surnameTextEditingController.text,
-                          bio: bioTextEditingController.text,
+                Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 20),
+                      child: Stack(
+                        children: [
+                          Container(
+                            width: 130,
+                            height: 130,
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                width: 4,
+                                color: Colors.white,
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  spreadRadius: 2,
+                                  blurRadius: 10,
+                                  color: Colors.black.withOpacity(0.1),
+                                  offset: const Offset(0, 10),
+                                )
+                              ],
+                              shape: BoxShape.circle,
+                              image: DecorationImage(
+                                fit: BoxFit.cover,
+                                image: imageProvider,
+                              ),
+                            ),
+                          ),
+                          Positioned(
+                            bottom: 0,
+                            right: 0,
+                            child: GestureDetector(
+                              onTap: _onTap,
+                              child: Container(
+                                height: 40,
+                                width: 40,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  border: Border.all(
+                                    width: 4,
+                                    color: Theme.of(context)
+                                        .scaffoldBackgroundColor,
+                                  ),
+                                  color: Colors.green,
+                                ),
+                                child: const Icon(
+                                  Icons.edit,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    _SettingsTextInput(
+                        textEditingController: nameTextEditingController,
+                        label: 'Name'),
+                    _SettingsTextInput(
+                      textEditingController: surnameTextEditingController,
+                      label: 'Surname',
+                    ),
+                    _SettingsTextInput(
+                      textEditingController: bioTextEditingController,
+                      label: 'Bio',
+                      textInputType: TextInputType.multiline,
+                    ),
+                    ElevatedButton(
+                      onPressed: () => context.read<AuthBloc>().add(
+                            AuthUpdateEvent(
+                              name: nameTextEditingController.text,
+                              surname: surnameTextEditingController.text,
+                              bio: bioTextEditingController.text,
+                              picture: image,
+                            ),
+                          ),
+                      child: const Text('Save'),
+                    ),
+                    TextButton(
+                      onPressed: () => context.read<AuthBloc>().add(
+                            SignOutEvent(),
+                          ),
+                      style: ButtonStyle(
+                        foregroundColor: MaterialStateColor.resolveWith(
+                          (states) => Theme.of(context).errorColor,
                         ),
                       ),
-                  child: const Text('Save'),
-                ),
-                TextButton(
-                  onPressed: () => context.read<AuthBloc>().add(
-                        SignOutEvent(),
-                      ),
-                  style: ButtonStyle(
-                    foregroundColor: MaterialStateColor.resolveWith(
-                      (states) => Theme.of(context).errorColor,
+                      child: const Text('Sign out'),
                     ),
-                  ),
-                  child: const Text('Sign out'),
+                  ],
                 ),
               ],
             );
           }
           return const LoadingScreen();
         },
+      ),
+    );
+  }
+
+  _onTap() async {
+    await ImagePicker()
+        .pickImage(source: ImageSource.camera)
+        .then((XFile? value) async {
+      if (value == null) {
+        return;
+      }
+
+      image = value;
+      Uint8List byte = await value.readAsBytes();
+
+      setState(() {
+        imageProvider = MemoryImage(byte);
+      });
+    });
+  }
+}
+
+class _SettingsTextInput extends StatelessWidget {
+  final TextEditingController textEditingController;
+  final String label;
+  final TextInputType textInputType;
+
+  const _SettingsTextInput({
+    required this.textEditingController,
+    required this.label,
+    this.textInputType = TextInputType.text,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+        vertical: 10,
+        horizontal: 10,
+      ),
+      child: TextField(
+        controller: textEditingController,
+        decoration: InputDecoration(
+          labelText: label,
+        ),
       ),
     );
   }

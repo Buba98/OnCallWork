@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:on_call_work/home_route/bloc/chat_bloc.dart';
 import 'package:on_call_work/home_route/button_chat.dart';
 import 'package:on_call_work/home_route/search/search_screen.dart';
 import 'package:on_call_work/home_route/add/add_screen.dart';
 import 'package:on_call_work/home_route/settings/settings_screen.dart';
 
+import 'bloc/job_bloc.dart';
 import 'modify/modify_screen.dart';
 
 class HomePage extends StatefulWidget {
@@ -16,20 +19,23 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int _currentIndex = 0;
 
-  final List<Widget> _screens = [
-    const SearchScreen(
-      leading: ButtonChat(),
-    ),
-    const AddScreen(
-      leading: ButtonChat(),
-    ),
-    const ModifyScreen(
-      leading: ButtonChat(),
-    ),
-    SettingScreen(
-      leading: const ButtonChat(),
-    ),
+  final List<Widget> _screens = const [
+    SearchScreen(),
+    AddScreen(),
+    ModifyScreen(),
+    SettingsScreen(),
   ];
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) => _reload(context));
+    super.initState();
+  }
+
+  void _reload(BuildContext context) {
+    context.read<JobBloc>().add(JobReloadEvent());
+    context.read<ChatBloc>().add(ChatReloadEvent());
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +64,17 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
-      body: _screens[_currentIndex],
+      body: RefreshIndicator(
+        onRefresh: () async {
+          _reload(context);
+        },
+        child: _screens[_currentIndex],
+      ),
+      appBar: AppBar(
+        actions: const [
+          ButtonChat(),
+        ],
+      ),
     );
   }
 }

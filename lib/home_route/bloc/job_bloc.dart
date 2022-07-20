@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:latlong2/latlong.dart';
@@ -14,18 +12,18 @@ class JobInitState extends JobState {}
 class JobLoadingState extends JobState {}
 
 class JobLoadedState extends JobState {
-  List<Job> jobs;
+  List<Job> availableJobs;
+  List<Job> ownJobs;
 
-  JobLoadedState({required this.jobs});
+  JobLoadedState({
+    required this.availableJobs,
+    required this.ownJobs,
+  });
 }
 
 abstract class JobEvent {}
 
-class JobReloadEvent extends JobEvent {
-  Completer? completer;
-
-  JobReloadEvent({this.completer});
-}
+class JobReloadEvent extends JobEvent {}
 
 class JobAddEvent extends JobEvent {
   final String name;
@@ -56,9 +54,18 @@ class JobBloc extends Bloc<JobEvent, JobState> {
 
     List<Job> jobs = await RepositoryService.getAvailableJobs();
 
-    event.completer?.complete();
+    List<Job> availableJobs = [];
+    List<Job> ownJobs = [];
 
-    emit(JobLoadedState(jobs: jobs));
+    for (Job element in jobs) {
+      if (element.uidEmployer == FirebaseAuth.instance.currentUser!.uid) {
+        ownJobs.add(element);
+      } else {
+        availableJobs.add(element);
+      }
+    }
+
+    emit(JobLoadedState(availableJobs: availableJobs, ownJobs: ownJobs));
   }
 
   _onJobAddEvent(JobAddEvent event, Emitter<JobState> emit) async {
@@ -69,7 +76,7 @@ class JobBloc extends Bloc<JobEvent, JobState> {
       to: event.to,
       pay: event.pay,
       location: event.location,
-      uidOwner: FirebaseAuth.instance.currentUser!.uid,
+      uidEmployer: FirebaseAuth.instance.currentUser!.uid,
       isAvailable: true,
     );
     RepositoryService.addJob(job);
