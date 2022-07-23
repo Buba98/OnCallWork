@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:on_call_work/home_route/chat/chat_employee/chat_page.dart';
+import 'package:on_call_work/home_route/chat/chat_employee/chat_employee_page.dart';
 
 class ButtonChat extends StatelessWidget {
   const ButtonChat({Key? key}) : super(key: key);

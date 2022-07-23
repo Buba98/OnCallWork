@@ -15,9 +15,7 @@ class ChatPage extends StatelessWidget {
       body: BlocBuilder<ChatBloc, ChatState>(
         builder: (BuildContext context, ChatState state) => ListView.builder(
           itemCount: state.chatsEmployee.length,
-          shrinkWrap: true,
           padding: const EdgeInsets.only(top: 16),
-          physics: const NeverScrollableScrollPhysics(),
           itemBuilder: (context, index) => ConversationWidget(
             chat: state.chatsEmployee[index],
           ),

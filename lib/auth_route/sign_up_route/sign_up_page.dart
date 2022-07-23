@@ -1,59 +1,86 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:on_call_work/auth_route/sign_in_route/sign_in_bloc.dart';
 import 'package:on_call_work/auth_route/sign_up_route/sign_up_bloc.dart';
+import 'package:on_call_work/widget/k_button.dart';
+
+import '../../widget/k_user_input.dart';
 
 class SignUpPage extends StatelessWidget {
-  SignUpPage({Key? key}) : super(key: key);
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
 
-  final TextEditingController emailTextEditingController =
-      TextEditingController();
-  final TextEditingController passwordTextEditingController =
-      TextEditingController();
+  SignUpPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: BlocProvider(
-        create: (BuildContext context) => SignUpBloc(),
-        child: BlocBuilder<SignUpBloc, SignUpState>(
-          builder: (BuildContext context, SignUpState state) {
-            return Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topRight,
+            end: Alignment.bottomLeft,
+            colors: [
+              Theme.of(context).colorScheme.primary,
+              Theme.of(context).colorScheme.secondary,
+            ],
+          ),
+        ),
+        padding: const EdgeInsets.symmetric(
+          horizontal: 20,
+        ),
+        child: BlocProvider(
+          create: (BuildContext context) => SignUpBloc(),
+          child: BlocBuilder<SignUpBloc, SignUpState>(
+            builder: (BuildContext context, SignUpState state) => Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                state == SignUpState.unhandledError
-                    ? const Text('Not recognized error')
-                    : Container(),
-                TextField(
-                  controller: emailTextEditingController,
-                  decoration: InputDecoration(
-                    labelText: 'Email',
-                    errorText: state == SignUpState.accountAlreadyExists
-                        ? "Account already exists"
-                        : null,
-                  ),
+                const Spacer(
+                  flex: 4,
                 ),
-                TextField(
-                  controller: passwordTextEditingController,
-                  decoration: InputDecoration(
-                    labelText: 'Password',
-                    errorText: state == SignUpState.weakPassword
-                        ? "Weak password"
-                        : null,
-                  ),
+                KUserInput(
+                  errorText: state == SignUpState.accountAlreadyExists
+                      ? 'Account already exists'
+                      : null,
+                  controller: emailController,
+                  hintText: 'Email',
+                  keyboardType: TextInputType.emailAddress,
+                ),
+                const SizedBox(
+                  height: 25,
+                ),
+                KUserInput(
+                  errorText: state == SignUpState.weakPassword
+                      ? 'Weak password'
+                      : null,
+                  controller: passwordController,
+                  hintText: 'Password',
+                  keyboardType: TextInputType.visiblePassword,
                   obscureText: true,
                 ),
-                ElevatedButton(
-                  onPressed: () => context.read<SignUpBloc>().add(
-                        SignUpEvent(
-                          email: emailTextEditingController.text,
-                          password: passwordTextEditingController.text,
-                        ),
-                      ),
-                  child: const Text('Sign up'),
+                const SizedBox(
+                  height: 25,
                 ),
+                Container(
+                  height: 55,
+                  padding: const EdgeInsets.symmetric(horizontal: 70),
+                  child: KButton(
+                      text: 'Sign up',
+                      onPressed: () {
+                        context.read<SignUpBloc>().add(
+                              SignUpEvent(
+                                email: emailController.text,
+                                password: passwordController.text,
+                              ),
+                            );
+                        emailController.clear();
+                        passwordController.clear();
+                      }),
+                ),
+                const Spacer(),
               ],
-            );
-          },
+            ),
+          ),
         ),
       ),
     );

@@ -40,7 +40,19 @@ class OnCallWorkApp extends StatelessWidget {
     return MaterialApp(
       title: 'OnCallWork',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        colorScheme: const ColorScheme(
+          brightness: Brightness.light,
+          primary: Colors.indigo,
+          onPrimary: Colors.white,
+          secondary: Colors.white,
+          onSecondary: Colors.indigo,
+          error: Colors.red,
+          onError: Colors.white,
+          background: Colors.white,
+          onBackground: Colors.indigo,
+          surface: Colors.white,
+          onSurface: Colors.indigo,
+        ),
       ),
       home: BlocBuilder<AuthBloc, AuthState>(
         builder: (BuildContext context, AuthState state) {

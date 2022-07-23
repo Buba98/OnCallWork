@@ -1,58 +1,86 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:on_call_work/auth_route/sign_in_route/sign_in_bloc.dart';
+import 'package:on_call_work/widget/k_button.dart';
+
+import '../../widget/k_user_input.dart';
 
 class SignInPage extends StatelessWidget {
-  SignInPage({Key? key}) : super(key: key);
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
 
-  final TextEditingController emailTextEditingController =
-      TextEditingController();
-  final TextEditingController passwordTextEditingController =
-      TextEditingController();
+  SignInPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: BlocProvider(
-        create: (BuildContext context) => SignInBloc(),
-        child: BlocBuilder<SignInBloc, SignInState>(
-          builder: (BuildContext context, SignInState state) {
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topRight,
+            end: Alignment.bottomLeft,
+            colors: [
+              Theme.of(context).colorScheme.primary,
+              Theme.of(context).colorScheme.secondary,
+            ],
+          ),
+        ),
+        padding: const EdgeInsets.symmetric(
+          horizontal: 20,
+        ),
+        child: BlocProvider(
+          create: (BuildContext context) => SignInBloc(),
+          child: BlocBuilder<SignInBloc, SignInState>(
+              builder: (BuildContext context, SignInState state) {
+            print(state.toString());
             return Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                state == SignInState.unhandledError
-                    ? const Text('Not recognized error')
-                    : Container(),
-                TextField(
-                  controller: emailTextEditingController,
-                  decoration: InputDecoration(
-                    labelText: 'Email',
-                    errorText:
-                        state == SignInState.wrongEmail ? "Wrong email" : null,
-                  ),
+                const Spacer(
+                  flex: 4,
                 ),
-                TextField(
-                  controller: passwordTextEditingController,
-                  decoration: InputDecoration(
-                    labelText: 'Password',
-                    errorText: state == SignInState.wrongEmail
-                        ? "Wrong password"
-                        : null,
-                  ),
+                KUserInput(
+                  errorText:
+                      state == SignInState.wrongPassword ? 'Wrong email' : null,
+                  controller: emailController,
+                  hintText: 'Email',
+                  keyboardType: TextInputType.emailAddress,
+                ),
+                const SizedBox(
+                  height: 25,
+                ),
+                KUserInput(
+                  errorText: state == SignInState.wrongPassword
+                      ? 'Wrong password'
+                      : null,
+                  controller: passwordController,
+                  hintText: 'Password',
+                  keyboardType: TextInputType.visiblePassword,
                   obscureText: true,
                 ),
-                ElevatedButton(
-                  onPressed: () => context.read<SignInBloc>().add(
-                        SignInEvent(
-                          email: emailTextEditingController.text,
-                          password: passwordTextEditingController.text,
-                        ),
-                      ),
-                  child: const Text('Sign in'),
+                const SizedBox(
+                  height: 25,
                 ),
+                Container(
+                  height: 55,
+                  padding: const EdgeInsets.symmetric(horizontal: 70),
+                  child: KButton(
+                      text: 'Login',
+                      onPressed: () {
+                        context.read<SignInBloc>().add(
+                              SignInEvent(
+                                email: emailController.text,
+                                password: passwordController.text,
+                              ),
+                            );
+                        // emailController.clear();
+                        // passwordController.clear();
+                      }),
+                ),
+                const Spacer(),
               ],
             );
-          },
+          }),
         ),
       ),
     );

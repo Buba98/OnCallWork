@@ -4,8 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:on_call_work/home_route/bloc/chat_bloc.dart';
 import 'package:on_call_work/home_route/chat/chat_employee/conversation_widget.dart';
 
-import '../../model/chat/chat.dart';
-import '../../model/job.dart';
+import '../../../model/chat/chat.dart';
+import '../../../model/job.dart';
 
 class ChatEmployerPage extends StatelessWidget {
   const ChatEmployerPage({Key? key, required this.job}) : super(key: key);

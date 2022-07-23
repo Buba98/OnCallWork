@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:on_call_work/home_route/chat/chat_employer_page.dart';
+import 'package:on_call_work/home_route/chat/chat_employer/chat_employer_page.dart';
 
 import '../bloc/job_bloc.dart';
 import '../job_card.dart';
