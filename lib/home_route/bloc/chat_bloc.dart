@@ -41,13 +41,17 @@ class ChatLoadedState extends ChatState {
 }
 
 class ChatBloc extends Bloc<ChatEvent, ChatState> {
+  final User user;
+
   final List<Chat> chatsEmployee = [];
   final List<Chat> chatsEmployer = [];
 
   StreamSubscription? chatEmployeeSubscription;
   StreamSubscription? chatEmployerSubscription;
 
-  ChatBloc() : super(ChatInitState()) {
+  ChatBloc({
+    required this.user,
+  }) : super(ChatInitState()) {
     on<ChatReloadEvent>(_onChatReloadEvent);
     on<ChatOpenEvent>(_onChatAddEvent);
     on<_ChatUpdateEvent>(_onChatUpdateEvent);

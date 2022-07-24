@@ -15,18 +15,8 @@ Future<void> main() async {
   await Firebase.initializeApp();
 
   runApp(
-    MultiBlocProvider(
-      providers: [
-        BlocProvider<AuthBloc>(
-          create: (BuildContext context) => AuthBloc(),
-        ),
-        BlocProvider<JobBloc>(
-          create: (BuildContext context) => JobBloc(),
-        ),
-        BlocProvider<ChatBloc>(
-          create: (BuildContext context) => ChatBloc(),
-        ),
-      ],
+    BlocProvider<AuthBloc>(
+      create: (BuildContext context) => AuthBloc(),
       child: const OnCallWorkApp(),
     ),
   );
@@ -61,7 +51,21 @@ class OnCallWorkApp extends StatelessWidget {
           if (state is AuthUnauthenticatedState) {
             return const AuthPage();
           } else if (state is AuthAuthenticatedState) {
-            return const HomePage();
+            return MultiBlocProvider(
+              providers: [
+                BlocProvider<JobBloc>(
+                  create: (BuildContext context) => JobBloc(
+                    user: state.user,
+                  ),
+                ),
+                BlocProvider<ChatBloc>(
+                  create: (BuildContext context) => ChatBloc(
+                    user: state.user,
+                  ),
+                ),
+              ],
+              child: const HomePage(),
+            );
           } else if (state is AuthCompleteAccountState) {
             return CompleteAccountPage();
           }

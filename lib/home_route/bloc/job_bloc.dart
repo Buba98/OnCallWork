@@ -1,9 +1,9 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:on_call_work/service/repository_service.dart';
 
 import '../../model/job.dart';
+import '../../model/user.dart';
 
 abstract class JobState {}
 
@@ -44,7 +44,11 @@ class JobAddEvent extends JobEvent {
 }
 
 class JobBloc extends Bloc<JobEvent, JobState> {
-  JobBloc() : super(JobInitState()) {
+  final User user;
+
+  JobBloc({
+    required this.user,
+  }) : super(JobInitState()) {
     on<JobReloadEvent>(_onJobReloadEvent);
     on<JobAddEvent>(_onJobAddEvent);
   }
@@ -58,7 +62,7 @@ class JobBloc extends Bloc<JobEvent, JobState> {
     List<Job> ownJobs = [];
 
     for (Job element in jobs) {
-      if (element.uidEmployer == FirebaseAuth.instance.currentUser!.uid) {
+      if (element.uidEmployer == user.uid!) {
         ownJobs.add(element);
       } else {
         availableJobs.add(element);
@@ -76,7 +80,7 @@ class JobBloc extends Bloc<JobEvent, JobState> {
       to: event.to,
       pay: event.pay,
       location: event.location,
-      uidEmployer: FirebaseAuth.instance.currentUser!.uid,
+      uidEmployer: user.uid!,
       isAvailable: true,
     );
     RepositoryService.addJob(job);

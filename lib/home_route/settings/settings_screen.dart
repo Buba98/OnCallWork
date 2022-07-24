@@ -170,19 +170,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   _onTap() async {
-    await ImagePicker()
-        .pickImage(source: ImageSource.camera)
-        .then((XFile? value) async {
-      if (value == null) {
-        return;
-      }
+    await ImagePicker().pickImage(source: ImageSource.camera).then(
+      (XFile? value) async {
+        if (value == null) {
+          return;
+        }
 
-      image = value;
-      Uint8List byte = await value.readAsBytes();
+        image = value;
+        Uint8List byte = await value.readAsBytes();
 
-      setState(() {
-        imageProvider = MemoryImage(byte);
-      });
-    });
+        setState(() {
+          imageProvider = MemoryImage(byte);
+        });
+      },
+    );
   }
 }

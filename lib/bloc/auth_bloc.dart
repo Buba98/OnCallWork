@@ -66,6 +66,7 @@ class AuthUpdateEvent extends AuthEvent {
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  internal_user.User? user;
 
   AuthBloc() : super(AuthInitState()) {
     on<_AuthenticatedEvent>(_onAuthenticatedEvent);
@@ -128,9 +129,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         ),
       );
 
-/*      if(event.picture != null){
-        event.picture.
-      }*/
+      if(event.picture != null){
+        await RepositoryService.updateProfilePicture(state.user, event.picture!);
+      }
 
       reload(event, emit);
     }
