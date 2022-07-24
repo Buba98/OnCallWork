@@ -33,10 +33,22 @@ class SignUpPage extends StatelessWidget {
           create: (BuildContext context) => SignUpBloc(),
           child: BlocBuilder<SignUpBloc, SignUpState>(
             builder: (BuildContext context, SignUpState state) => Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                const Spacer(),
+                const FittedBox(
+                  fit: BoxFit.fitWidth,
+                  child: Text(
+                    'Login',
+                    style: TextStyle(
+                      fontSize: 34,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
                 const Spacer(
-                  flex: 4,
+                  flex: 3,
                 ),
                 KUserInput(
                   errorText: state == SignUpState.accountAlreadyExists

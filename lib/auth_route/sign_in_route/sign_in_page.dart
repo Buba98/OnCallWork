@@ -32,12 +32,23 @@ class SignInPage extends StatelessWidget {
           create: (BuildContext context) => SignInBloc(),
           child: BlocBuilder<SignInBloc, SignInState>(
               builder: (BuildContext context, SignInState state) {
-            print(state.toString());
             return Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                const Spacer(),
+                const FittedBox(
+                  fit: BoxFit.fitWidth,
+                  child: Text(
+                    'Login',
+                    style: TextStyle(
+                      fontSize: 34,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
                 const Spacer(
-                  flex: 4,
+                  flex: 3,
                 ),
                 KUserInput(
                   errorText:

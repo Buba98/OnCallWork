@@ -42,7 +42,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       bottomNavigationBar: BottomNavigationBar(
         unselectedItemColor: Theme.of(context).unselectedWidgetColor,
-        selectedItemColor: Theme.of(context).colorScheme.secondary,
+        selectedItemColor: Theme.of(context).colorScheme.primary,
         currentIndex: _currentIndex,
         onTap: (int index) => setState(() => _currentIndex = index),
         items: const <BottomNavigationBarItem>[

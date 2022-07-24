@@ -33,7 +33,7 @@ class AuthPage extends StatelessWidget {
               child: Text(
                 'On call work',
                 style: TextStyle(
-                  fontSize: 54,
+                  fontSize: 34,
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
                 ),

@@ -5,6 +5,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:on_call_work/bloc/auth_bloc.dart';
 import 'package:on_call_work/home_route/loading_screen.dart';
+import 'package:on_call_work/widget/k_button.dart';
+
+import '../../widget/k_user_input.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({Key? key}) : super(key: key);
@@ -45,6 +48,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             bioTextEditingController.text = state.user.bio;
 
             return ListView(
+              padding: const EdgeInsets.symmetric(horizontal: 15),
               children: [
                 Column(
                   children: [
@@ -102,39 +106,57 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         ],
                       ),
                     ),
-                    _SettingsTextInput(
-                        textEditingController: nameTextEditingController,
-                        label: 'Name'),
-                    _SettingsTextInput(
-                      textEditingController: surnameTextEditingController,
-                      label: 'Surname',
-                    ),
-                    _SettingsTextInput(
-                      textEditingController: bioTextEditingController,
-                      label: 'Bio',
-                      textInputType: TextInputType.multiline,
-                    ),
-                    ElevatedButton(
-                      onPressed: () => context.read<AuthBloc>().add(
-                            AuthUpdateEvent(
-                              name: nameTextEditingController.text,
-                              surname: surnameTextEditingController.text,
-                              bio: bioTextEditingController.text,
-                              picture: image,
-                            ),
-                          ),
-                      child: const Text('Save'),
-                    ),
-                    TextButton(
-                      onPressed: () => context.read<AuthBloc>().add(
-                            SignOutEvent(),
-                          ),
-                      style: ButtonStyle(
-                        foregroundColor: MaterialStateColor.resolveWith(
-                          (states) => Theme.of(context).errorColor,
-                        ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      child: KUserInput(
+                        controller: nameTextEditingController,
+                        keyboardType: TextInputType.text,
+                        hintText: 'Name',
                       ),
-                      child: const Text('Sign out'),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      child: KUserInput(
+                        controller: surnameTextEditingController,
+                        keyboardType: TextInputType.text,
+                        hintText: 'Surname',
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      child: KUserInput(
+                        controller: bioTextEditingController,
+                        keyboardType: TextInputType.multiline,
+                        hintText: 'Bio',
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      child: KButton(
+                        onPressed: () => context.read<AuthBloc>().add(
+                              AuthUpdateEvent(
+                                name: nameTextEditingController.text,
+                                surname: surnameTextEditingController.text,
+                                bio: bioTextEditingController.text,
+                                picture: image,
+                              ),
+                            ),
+                        text: 'Save',
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      child: TextButton(
+                        onPressed: () => context.read<AuthBloc>().add(
+                              SignOutEvent(),
+                            ),
+                        style: ButtonStyle(
+                          foregroundColor: MaterialStateColor.resolveWith(
+                            (states) => Theme.of(context).errorColor,
+                          ),
+                        ),
+                        child: const Text('Sign out'),
+                      ),
                     ),
                   ],
                 ),
@@ -162,33 +184,5 @@ class _SettingsScreenState extends State<SettingsScreen> {
         imageProvider = MemoryImage(byte);
       });
     });
-  }
-}
-
-class _SettingsTextInput extends StatelessWidget {
-  final TextEditingController textEditingController;
-  final String label;
-  final TextInputType textInputType;
-
-  const _SettingsTextInput({
-    required this.textEditingController,
-    required this.label,
-    this.textInputType = TextInputType.text,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(
-        vertical: 10,
-        horizontal: 10,
-      ),
-      child: TextField(
-        controller: textEditingController,
-        decoration: InputDecoration(
-          labelText: label,
-        ),
-      ),
-    );
   }
 }
