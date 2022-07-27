@@ -1,10 +1,10 @@
 import 'dart:async';
 import 'dart:developer' as developer;
+import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:image_picker/image_picker.dart';
 
 import '../model/chat/chat.dart';
 import '../model/chat/message.dart';
@@ -159,12 +159,10 @@ class RepositoryService {
     return null;
   }
 
-  static updateProfilePicture(internal_user.User user, XFile picture) async {
+  static updateProfilePicture(
+      internal_user.User user, Uint8List picture) async {
     try {
-      await baseStorage
-          .child(user.uid!)
-          .child('profile.png')
-          .putData(await picture.readAsBytes());
+      await baseStorage.child(user.uid!).child('profile.png').putData(picture);
     } catch (e) {
       developer.log("Failed to upload profile picture: $e");
     }

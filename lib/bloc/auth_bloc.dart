@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:typed_data';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -49,7 +50,7 @@ class AuthReloadEvent extends AuthEvent {}
 class SignOutEvent extends AuthEvent {}
 
 class AuthUpdateEvent extends AuthEvent {
-  final XFile? picture;
+  final Uint8List? picture;
   final String name;
   final String surname;
   final String bio;
