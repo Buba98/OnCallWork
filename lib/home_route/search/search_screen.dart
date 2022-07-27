@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:on_call_work/home_route/k_app_bar.dart';
 
 import '../../bloc/auth_bloc.dart';
 import '../bloc/chat_bloc.dart';
@@ -14,6 +15,7 @@ class SearchScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: KAppBar(),
       body: BlocBuilder<JobBloc, JobState>(
         builder: (BuildContext context, JobState state) {
           if (state is JobLoadedState) {

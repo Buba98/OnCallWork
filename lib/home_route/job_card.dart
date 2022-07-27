@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:on_call_work/helper/date_helper.dart';
 
 import '../model/job.dart';
 
@@ -102,13 +103,13 @@ class JobCard extends StatelessWidget {
                       ),
                     ),
                     TextSpan(
-                      text: '\nFrom: ${job.from.toString().split(':00')[0]}',
+                      text: '\nFrom: ${DateHelper.dateToString(job.from)}',
                       style: const TextStyle(
                         fontWeight: FontWeight.normal,
                       ),
                     ),
                     TextSpan(
-                      text: '\nTo: ${job.to.toString().split(':00')[0]}',
+                      text: '\nTo: ${DateHelper.dateToString(job.from)}',
                       style: const TextStyle(
                         fontWeight: FontWeight.normal,
                       ),

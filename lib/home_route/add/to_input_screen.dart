@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:on_call_work/home_route/add/add_bloc.dart';
+import 'package:on_call_work/widget/k_button.dart';
+import 'package:on_call_work/widget/k_text.dart';
+import 'package:on_call_work/widget/k_user_input.dart';
+
+import '../../helper/date_helper.dart';
 
 class ToInputScreen extends StatefulWidget {
-  final Function(DateTime) onPressed;
-  final DateTime from;
+  final AddToState state;
 
   const ToInputScreen({
     Key? key,
-    required this.onPressed,
-    required this.from,
+    required this.state,
   }) : super(key: key);
 
   @override
@@ -22,7 +27,30 @@ class _ToInputScreenState extends State<ToInputScreen> {
 
   DateTime? dateTime;
   TimeOfDay? timeOfDay;
+
   bool error = false;
+
+  @override
+  void initState() {
+    if (widget.state.to != null) {
+      dateTime = DateTime(
+        widget.state.to!.year,
+        widget.state.to!.month,
+        widget.state.to!.day,
+      );
+      timeOfDay = TimeOfDay(
+        hour: widget.state.to!.hour,
+        minute: widget.state.to!.minute,
+      );
+
+      dateTextEditingController.text =
+          DateHelper.dateToString(dateTime!).split(' ')[0];
+
+      timeTextEditingController.text =
+          '${timeOfDay!.hour}:${timeOfDay!.minute < 10 ? '0${timeOfDay!.minute}' : timeOfDay!.minute}';
+    }
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,34 +58,31 @@ class _ToInputScreenState extends State<ToInputScreen> {
       children: [
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 20),
-          child: error
-              ? Text(
-                  'Shift cannot end before starting',
-                  style: TextStyle(
-                    color: Theme.of(context).errorColor,
-                  ),
-                )
-              : const Text('Enter when the work shift ends'),
+          child: KText(
+            'Enter when the work shift ends',
+            errorText: 'Work shift cannot end before starting',
+            isError: widget.state.isDateToBeforeFrom,
+          ),
         ),
-        TextField(
+        KUserInput(
           readOnly: true,
           onTap: () => _selectDate(context),
-          decoration: const InputDecoration(
-            prefixIcon: Icon(Icons.calendar_month),
-            labelText: 'End date',
-          ),
+          prefixIcon: Icons.calendar_month,
+          hintText: 'Start date',
+          isError: error && dateTime == null,
+          errorText: 'Please select a date',
           controller: dateTextEditingController,
         ),
         const Spacer(
           flex: 1,
         ),
-        TextField(
+        KUserInput(
           readOnly: true,
           onTap: () => _selectTime(context),
-          decoration: const InputDecoration(
-            prefixIcon: Icon(Icons.watch_later_outlined),
-            labelText: 'End time',
-          ),
+          prefixIcon: Icons.watch_later_outlined,
+          hintText: 'Start time',
+          errorText: 'Please select a time',
+          isError: error && timeOfDay == null,
           controller: timeTextEditingController,
         ),
         const Spacer(
@@ -65,9 +90,9 @@ class _ToInputScreenState extends State<ToInputScreen> {
         ),
         Padding(
           padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
-          child: ElevatedButton(
+          child: KButton(
             onPressed: _onPressed,
-            child: const Text('Next'),
+            text: 'Next',
           ),
         ),
       ],
@@ -77,30 +102,19 @@ class _ToInputScreenState extends State<ToInputScreen> {
   Future<void> _selectDate(BuildContext context) async {
     DateTime? date = await showDatePicker(
       context: context,
-      initialDate: widget.from,
-      firstDate: widget.from,
-      lastDate: widget.from.add(const Duration(
+      initialDate: DateTime.now(),
+      firstDate: DateTime.now(),
+      lastDate: DateTime.now().add(const Duration(
         days: 3650,
       )),
     );
 
     if (date != null) {
       dateTime = date;
-      dateTextEditingController.text = date.toString().split(' ')[0];
-      if (timeOfDay != null) {
-        DateTime dateTime = this.dateTime!.add(
-              Duration(
-                hours: timeOfDay!.hour,
-                minutes: timeOfDay!.minute,
-              ),
-            );
+      dateTextEditingController.text =
+          DateHelper.dateToString(date).split(' ')[0];
 
-        if (dateTime.isBefore(widget.from)) {
-          setState(() => error = true);
-        } else {
-          setState(() => error = false);
-        }
-      }
+      setState(() => error = false);
     }
   }
 
@@ -112,33 +126,21 @@ class _ToInputScreenState extends State<ToInputScreen> {
 
     if (timeOfDay != null) {
       this.timeOfDay = timeOfDay;
-      timeTextEditingController.text = '${timeOfDay.hour}:${timeOfDay.minute}';
-      if (dateTime != null) {
-        DateTime dateTime = this.dateTime!.add(
-              Duration(
-                hours: timeOfDay.hour,
-                minutes: timeOfDay.minute,
-              ),
-            );
+      timeTextEditingController.text =
+          '${timeOfDay.hour}:${timeOfDay.minute < 10 ? '0${timeOfDay.minute}' : timeOfDay.minute}';
 
-        if (dateTime.isBefore(widget.from)) {
-          setState(() => error = true);
-        } else {
-          setState(() => error = false);
-        }
-      }
+      setState(() => error = false);
     }
   }
 
-  void _onPressed() {
-    if (dateTime != null && timeOfDay != null && !error) {
-      DateTime dateTime = this.dateTime!.add(
-            Duration(
-              hours: timeOfDay!.hour,
-              minutes: timeOfDay!.minute,
-            ),
-          );
-      widget.onPressed(dateTime);
+  _onPressed() {
+    if (dateTime != null || timeOfDay != null) {
+      context.read<AddBloc>().add(AddToEvent(
+          to: dateTime!.add(
+              Duration(hours: timeOfDay!.hour, minutes: timeOfDay!.minute))));
+      setState(() => error = false);
+    } else {
+      setState(() => error = true);
     }
   }
 }

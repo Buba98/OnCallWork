@@ -51,9 +51,8 @@ class SignUpPage extends StatelessWidget {
                   flex: 3,
                 ),
                 KUserInput(
-                  errorText: state == SignUpState.accountAlreadyExists
-                      ? 'Account already exists'
-                      : null,
+                  isError: state == SignUpState.accountAlreadyExists,
+                  errorText: 'Account already exists',
                   controller: emailController,
                   hintText: 'Email',
                   keyboardType: TextInputType.emailAddress,
@@ -62,9 +61,8 @@ class SignUpPage extends StatelessWidget {
                   height: 25,
                 ),
                 KUserInput(
-                  errorText: state == SignUpState.weakPassword
-                      ? 'Weak password'
-                      : null,
+                  isError: state == SignUpState.weakPassword,
+                  errorText: 'Weak password',
                   controller: passwordController,
                   hintText: 'Password',
                   keyboardType: TextInputType.visiblePassword,

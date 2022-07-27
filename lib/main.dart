@@ -39,7 +39,7 @@ class OnCallWorkApp extends StatelessWidget {
           error: Colors.red,
           onError: Colors.white,
           background: Colors.white,
-          onBackground: Colors.indigo,
+          onBackground: Colors.black,
           surface: Colors.white,
           onSurface: Colors.indigo,
         ),

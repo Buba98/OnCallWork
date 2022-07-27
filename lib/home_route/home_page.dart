@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:on_call_work/home_route/bloc/chat_bloc.dart';
-import 'package:on_call_work/home_route/button_chat.dart';
 import 'package:on_call_work/home_route/search/search_screen.dart';
 import 'package:on_call_work/home_route/add/add_screen.dart';
 import 'package:on_call_work/home_route/settings/settings_screen.dart';
@@ -69,11 +68,6 @@ class _HomePageState extends State<HomePage> {
           _reload(context);
         },
         child: _screens[_currentIndex],
-      ),
-      appBar: AppBar(
-        actions: const [
-          ButtonChat(),
-        ],
       ),
     );
   }

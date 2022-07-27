@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:on_call_work/bloc/auth_bloc.dart';
+import 'package:on_call_work/home_route/k_app_bar.dart';
 import 'package:on_call_work/home_route/loading_screen.dart';
 import 'package:on_call_work/widget/k_button.dart';
 
@@ -32,6 +33,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: KAppBar(),
       body: BlocBuilder<AuthBloc, AuthState>(
         builder: (BuildContext context, AuthState state) {
           if (state is AuthAuthenticatedState) {

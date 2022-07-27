@@ -66,7 +66,6 @@ class AuthUpdateEvent extends AuthEvent {
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
-  internal_user.User? user;
 
   AuthBloc() : super(AuthInitState()) {
     on<_AuthenticatedEvent>(_onAuthenticatedEvent);

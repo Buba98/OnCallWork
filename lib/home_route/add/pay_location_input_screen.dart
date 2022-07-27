@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:on_call_work/home_route/add/add_bloc.dart';
+import 'package:on_call_work/widget/k_button.dart';
+import 'package:on_call_work/widget/k_text.dart';
+import 'package:on_call_work/widget/k_user_input.dart';
 
 class PayLocationInputScreen extends StatefulWidget {
-  final Function(LatLng, num) onPressed;
+  final AddPayLocationState state;
 
   const PayLocationInputScreen({
     Key? key,
-    required this.onPressed,
+    required this.state,
   }) : super(key: key);
 
   @override
@@ -22,19 +27,33 @@ class _PayLocationInputScreenState extends State<PayLocationInputScreen> {
   LatLng? latLng;
 
   @override
+  void initState() {
+    if (widget.state.location != null) {
+      latLng = widget.state.location!;
+    }
+
+    if (widget.state.pay != null) {
+      payTextEditingController.text = '${widget.state.pay}';
+    }
+
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         const Padding(
           padding: EdgeInsets.symmetric(vertical: 20),
-          child: Text('Enter name and description of your job offer'),
+          child: KText('Enter name and description of your job offer'),
         ),
-        TextField(
+        KUserInput(
           keyboardType: const TextInputType.numberWithOptions(),
           controller: payTextEditingController,
-          decoration: const InputDecoration(
-            labelText: 'Pay',
-          ),
+          hintText: 'Pay',
+          errorText: 'Pay cannot be below 0',
+          isError: widget.state.isPayBelowZero,
+          prefixIcon: Icons.euro,
         ),
         const Spacer(
           flex: 1,
@@ -47,10 +66,7 @@ class _PayLocationInputScreenState extends State<PayLocationInputScreen> {
               onTap: (tapPosition, LatLng point) {
                 setState(() => latLng = point);
               },
-              center: LatLng(51.5, -0.09),
-              zoom: 7.0,
-              maxZoom: 10.0,
-              minZoom: 3.0,
+              center: widget.state.location ?? LatLng(45.4781014, 9.2250675),
             ),
             layers: [
               TileLayerOptions(
@@ -64,10 +80,7 @@ class _PayLocationInputScreenState extends State<PayLocationInputScreen> {
                       width: 80.0,
                       height: 80.0,
                       point: latLng!,
-                      builder: (ctx) => Container(
-                        key: const Key('blue'),
-                        child: const FlutterLogo(),
-                      ),
+                      builder: (ctx) => const Icon(Icons.location_on),
                     ),
                 ],
               ),
@@ -79,9 +92,9 @@ class _PayLocationInputScreenState extends State<PayLocationInputScreen> {
         ),
         Padding(
           padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
-          child: ElevatedButton(
+          child: KButton(
             onPressed: _onPressed,
-            child: const Text('Next'),
+            text: 'Next',
           ),
         ),
       ],
@@ -90,7 +103,8 @@ class _PayLocationInputScreenState extends State<PayLocationInputScreen> {
 
   void _onPressed() {
     if (payTextEditingController.text.isNotEmpty && latLng != null) {
-      widget.onPressed(latLng!, num.parse(payTextEditingController.text));
+      context.read<AddBloc>().add(AddPayLocationEvent(
+          location: latLng!, pay: num.parse(payTextEditingController.text)));
     }
   }
 }

@@ -51,8 +51,8 @@ class SignInPage extends StatelessWidget {
                   flex: 3,
                 ),
                 KUserInput(
-                  errorText:
-                      state == SignInState.wrongPassword ? 'Wrong email' : null,
+                  isError: state == SignInState.wrongPassword,
+                  errorText: 'Wrong email',
                   controller: emailController,
                   hintText: 'Email',
                   keyboardType: TextInputType.emailAddress,
@@ -61,9 +61,8 @@ class SignInPage extends StatelessWidget {
                   height: 25,
                 ),
                 KUserInput(
-                  errorText: state == SignInState.wrongPassword
-                      ? 'Wrong password'
-                      : null,
+                  isError: state == SignInState.wrongPassword,
+                  errorText: 'Wrong password',
                   controller: passwordController,
                   hintText: 'Password',
                   keyboardType: TextInputType.visiblePassword,
