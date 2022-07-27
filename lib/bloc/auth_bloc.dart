@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
@@ -20,7 +22,11 @@ class AuthAuthenticatedState extends AuthState {
   }
 }
 
-class AuthCompleteAccountState extends AuthState {}
+class AuthCompleteAccountState extends AuthState {
+  final String uid;
+
+  AuthCompleteAccountState({required this.uid});
+}
 
 class AuthDuplicatedAccountState extends AuthState {}
 
@@ -38,15 +44,7 @@ class _UnauthenticatedEvent extends AuthEvent {}
 
 class _CompleteAccountEvent extends AuthEvent {}
 
-class AuthCompleteAccountEvent extends AuthEvent {
-  final String name;
-  final String surname;
-
-  AuthCompleteAccountEvent({
-    required this.name,
-    required this.surname,
-  });
-}
+class AuthReloadEvent extends AuthEvent {}
 
 class SignOutEvent extends AuthEvent {}
 
@@ -66,6 +64,7 @@ class AuthUpdateEvent extends AuthEvent {
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  StreamSubscription<User?>? streamSubscription;
 
   AuthBloc() : super(AuthInitState()) {
     on<_AuthenticatedEvent>(_onAuthenticatedEvent);
@@ -73,42 +72,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<_CompleteAccountEvent>(_onCompleteAccountEvent);
     on<SignOutEvent>(_onSignOutEvent);
     on<AuthUpdateEvent>(_onAuthUpdateEvent);
-    on<AuthCompleteAccountEvent>(_onAuthCompleteAccountEvent);
+    on<AuthReloadEvent>(_onAuthReloadEvent);
 
-    _firebaseAuth.authStateChanges().listen((User? user) async {
-      if (user == null) {
-        add(_UnauthenticatedEvent());
-      } else {
-        internal_user.User? user = await RepositoryService.getUserByUid(
-            FirebaseAuth.instance.currentUser!.uid);
-
-        if (user == null) {
-          add(_CompleteAccountEvent());
-        } else {
-          add(_AuthenticatedEvent(user: user));
-        }
-      }
-    });
-  }
-
-  _onAuthCompleteAccountEvent(
-      AuthCompleteAccountEvent event, Emitter<AuthState> emit) async {
-    if ((await RepositoryService.getUserByUid(
-            FirebaseAuth.instance.currentUser!.uid)) !=
-        null) {
-      emit(AuthDuplicatedAccountState());
-      return;
-    }
-
-    internal_user.User user = internal_user.User(
-      name: event.name,
-      surname: event.surname,
-      uid: FirebaseAuth.instance.currentUser!.uid,
-      bio: '',
-    );
-
-    await RepositoryService.addUser(user);
-    reload(event, emit);
+    add(AuthReloadEvent());
   }
 
   _onAuthUpdateEvent(AuthUpdateEvent event, Emitter<AuthState> emit) async {
@@ -128,34 +94,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         ),
       );
 
-      if(event.picture != null){
-        await RepositoryService.updateProfilePicture(state.user, event.picture!);
+      if (event.picture != null) {
+        await RepositoryService.updateProfilePicture(
+            state.user, event.picture!);
       }
 
-      reload(event, emit);
-    }
-  }
-
-  reload(AuthEvent event, Emitter<AuthState> emit) async {
-    User? user = _firebaseAuth.currentUser;
-
-    if (user == null) {
-      add(_UnauthenticatedEvent());
-    } else {
-      internal_user.User? user = await RepositoryService.getUserByUid(
-          FirebaseAuth.instance.currentUser!.uid);
-
-      if (user == null) {
-        add(
-          _CompleteAccountEvent(),
-        );
-      } else {
-        add(
-          _AuthenticatedEvent(
-            user: user,
-          ),
-        );
-      }
+      add(AuthReloadEvent());
     }
   }
 
@@ -166,7 +110,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   }
 
   _onCompleteAccountEvent(AuthEvent event, Emitter<AuthState> emit) {
-    emit(AuthCompleteAccountState());
+    emit(AuthCompleteAccountState(uid: _firebaseAuth.currentUser!.uid));
   }
 
   _onUnauthenticatedEvent(AuthEvent event, Emitter<AuthState> emit) {
@@ -175,6 +119,25 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   _onSignOutEvent(AuthEvent event, Emitter<AuthState> emit) async {
     await FirebaseAuth.instance.signOut();
-    reload(event, emit);
+  }
+
+  _onAuthReloadEvent(AuthEvent event, Emitter<AuthState> emit) {
+    streamSubscription?.cancel();
+
+    streamSubscription =
+        _firebaseAuth.authStateChanges().listen((User? user) async {
+      if (user == null) {
+        add(_UnauthenticatedEvent());
+      } else {
+        internal_user.User? user = await RepositoryService.getUserByUid(
+            FirebaseAuth.instance.currentUser!.uid);
+
+        if (user == null) {
+          add(_CompleteAccountEvent());
+        } else {
+          add(_AuthenticatedEvent(user: user));
+        }
+      }
+    });
   }
 }

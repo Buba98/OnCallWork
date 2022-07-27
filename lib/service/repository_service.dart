@@ -1,10 +1,10 @@
 import 'dart:async';
+import 'dart:developer' as developer;
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
-import 'dart:developer' as developer;
 
 import '../model/chat/chat.dart';
 import '../model/chat/message.dart';
@@ -38,13 +38,11 @@ class RepositoryService {
     return jobList;
   }
 
-  static Future<void> addJob(Job job) async =>
-      jobs.add(job.firestore).then(
-            (value) => developer.log("Document added: $value"),
-      )
-        ..catchError(
-              (error) => developer.log("Failed to add user: $error"),
-        );
+  static Future<void> addJob(Job job) async => jobs.add(job.firestore).then(
+        (value) => developer.log("Document added: $value"),
+      )..catchError(
+      (error) => developer.log("Failed to add user: $error"),
+    );
 
   static Future<internal_user.User?> getUserByUid(String uid) async {
     DocumentSnapshot snapshot = await users.doc(uid).get();
@@ -57,19 +55,17 @@ class RepositoryService {
   }
 
   static Future<void> addUser(internal_user.User user) async =>
-      users.doc(user.uid).set(user.firestore).then(
+      users.doc(user.uid).set(user.firestore, SetOptions(merge: true)).then(
             (value) => developer.log("Document added"),
-      )
-        ..catchError(
-              (error) => developer.log("Failed to add user: $error"),
+          )..catchError(
+          (error) => developer.log("Failed to add user: $error"),
         );
 
   static Future<void> updateUser(internal_user.User user) async =>
       users.doc(user.uid).update(user.json).then(
             (value) => developer.log("Document updated"),
-      )
-        ..catchError(
-              (error) => developer.log("Failed to update user: $error"),
+          )..catchError(
+          (error) => developer.log("Failed to update user: $error"),
         );
 
   static Stream<List<Chat>> listenChatEmployee() {
@@ -126,14 +122,13 @@ class RepositoryService {
       chats.doc(chat.uid).update({
         'messages': FieldValue.arrayUnion([newMessage.json]),
       }).then(
-            (value) => developer.log("Document added"),
-      )
-        ..catchError(
-              (error) => developer.log("Failed to add user: $error"),
+        (value) => developer.log("Document added"),
+      )..catchError(
+          (error) => developer.log("Failed to add user: $error"),
         );
 
-  static Future<void> openChat(Job job, internal_user.User user,
-      Message firstMessage) async {
+  static Future<void> openChat(
+      Job job, internal_user.User user, Message firstMessage) async {
     Chat chat = Chat(
       uidJob: job.uid!,
       uidEmployee: user.uid!,
@@ -143,9 +138,8 @@ class RepositoryService {
     );
     return chats.add(chat.firestore).then(
           (value) => developer.log("Document added: $value"),
-    )
-      ..catchError(
-            (error) => developer.log("Failed to add user: $error"),
+        )..catchError(
+        (error) => developer.log("Failed to add user: $error"),
       );
   }
 

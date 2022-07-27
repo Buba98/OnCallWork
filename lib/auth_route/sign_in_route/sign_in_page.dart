@@ -71,21 +71,18 @@ class SignInPage extends StatelessWidget {
                 const SizedBox(
                   height: 25,
                 ),
-                Container(
-                  height: 55,
-                  padding: const EdgeInsets.symmetric(horizontal: 70),
-                  child: KButton(
-                      text: 'Login',
-                      onPressed: () {
-                        context.read<SignInBloc>().add(
-                              SignInEvent(
-                                email: emailController.text,
-                                password: passwordController.text,
-                              ),
-                            );
-                        // emailController.clear();
-                        // passwordController.clear();
-                      }),
+                KButton(
+                  text: 'Login',
+                  onPressed: () {
+                    context.read<SignInBloc>().add(
+                          SignInEvent(
+                            email: emailController.text,
+                            password: passwordController.text,
+                          ),
+                        );
+                    // emailController.clear();
+                    // passwordController.clear();
+                  },
                 ),
                 const Spacer(),
               ],

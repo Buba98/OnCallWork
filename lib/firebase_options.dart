@@ -63,7 +63,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '236997337704',
     projectId: 'on-call-work-project',
     storageBucket: 'on-call-work-project.appspot.com',
-    iosClientId: '236997337704-gjb6r6ei0m6nq836c161sqsbibl8jvam.apps.googleusercontent.com',
+    iosClientId:
+        '236997337704-gjb6r6ei0m6nq836c161sqsbibl8jvam.apps.googleusercontent.com',
     iosBundleId: 'com.buba.onCallWork',
   );
 }

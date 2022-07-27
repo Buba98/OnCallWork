@@ -1,4 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:on_call_work/model/user.dart' as internal_user;
+
+import '../service/repository_service.dart';
 
 enum CompleteAccountState {
   init,
@@ -18,11 +21,21 @@ class CompleteAccountEvent {
 
 class CompleteAccountBloc
     extends Bloc<CompleteAccountEvent, CompleteAccountState> {
-  CompleteAccountBloc() : super(CompleteAccountState.init) {
+  final String uid;
+
+  CompleteAccountBloc({required this.uid}) : super(CompleteAccountState.init) {
     on<CompleteAccountEvent>(_onCompleteAccountEvent);
   }
 
   Future<void> _onCompleteAccountEvent(
       CompleteAccountEvent event, Emitter<CompleteAccountState> emit) async {
+    internal_user.User user = internal_user.User(
+      name: event.name,
+      surname: event.surname,
+      uid: uid,
+      bio: '',
+    );
+
+    await RepositoryService.addUser(user);
   }
 }

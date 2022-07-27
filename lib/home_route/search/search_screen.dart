@@ -3,8 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:on_call_work/home_route/k_app_bar.dart';
 
 import '../../bloc/auth_bloc.dart';
-import '../bloc/chat_bloc.dart';
 import '../../model/chat/message.dart';
+import '../bloc/chat_bloc.dart';
 import '../bloc/job_bloc.dart';
 import '../job_card.dart';
 import '../loading_screen.dart';

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:on_call_work/auth_route/sign_in_route/sign_in_bloc.dart';
 import 'package:on_call_work/auth_route/sign_up_route/sign_up_bloc.dart';
 import 'package:on_call_work/widget/k_button.dart';
 
@@ -71,21 +70,18 @@ class SignUpPage extends StatelessWidget {
                 const SizedBox(
                   height: 25,
                 ),
-                Container(
-                  height: 55,
-                  padding: const EdgeInsets.symmetric(horizontal: 70),
-                  child: KButton(
-                      text: 'Sign up',
-                      onPressed: () {
-                        context.read<SignUpBloc>().add(
-                              SignUpEvent(
-                                email: emailController.text,
-                                password: passwordController.text,
-                              ),
-                            );
-                        emailController.clear();
-                        passwordController.clear();
-                      }),
+                KButton(
+                  text: 'Sign up',
+                  onPressed: () {
+                    context.read<SignUpBloc>().add(
+                          SignUpEvent(
+                            email: emailController.text,
+                            password: passwordController.text,
+                          ),
+                        );
+                    emailController.clear();
+                    passwordController.clear();
+                  },
                 ),
                 const Spacer(),
               ],

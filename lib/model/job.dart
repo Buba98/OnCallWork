@@ -41,7 +41,8 @@ class Job {
 
     json['from'] = (json['from'] as Timestamp).toDate();
     json['to'] = (json['to'] as Timestamp).toDate();
-    json['location'] = LatLng(json['location'].latitude, json['location'].longitude);
+    json['location'] =
+        LatLng(json['location'].latitude, json['location'].longitude);
 
     json['uid'] = documentSnapshot.id;
     json['uid_employer'] = (json['uid_employer'] as DocumentReference?)!.id;

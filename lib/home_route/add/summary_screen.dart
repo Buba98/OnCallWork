@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:latlong2/latlong.dart';
 import 'package:on_call_work/home_route/add/add_bloc.dart';
 import 'package:on_call_work/home_route/add/widget/summary_row.dart';
 import 'package:on_call_work/widget/k_button.dart';
